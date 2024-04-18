@@ -11,6 +11,8 @@ namespace DatabaseProjekt
 
             NpgsqlDataSource dataSource = NpgsqlDataSource.Create(connectionString);
 
+            LoginSystem loginSystem = new LoginSystem(dataSource);
+
         }
     }
 }
