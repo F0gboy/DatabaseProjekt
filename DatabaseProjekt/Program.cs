@@ -10,15 +10,16 @@ namespace DatabaseProjekt
         {
             string connectionString = "Host=localhost;Username=postgres;Password=hats1234;Database=data";
             NpgsqlDataSource dataSource = NpgsqlDataSource.Create(connectionString);
-
             List<Character> userChars = new List<Character>();
-            userChars.Add(GenerateChar(userChars));
-            userChars.Add(GenerateChar(userChars));
-            userChars.Add(GenerateChar(userChars));
-            userChars.Add(GenerateChar(userChars));
-            userChars.Add(GenerateChar(userChars));
-            userChars.Add(GenerateChar(userChars));
-            userChars.Add(GenerateChar(userChars));
+
+
+            userChars.Add(GenerateChar(userChars, dataSource));
+            userChars.Add(GenerateChar(userChars, dataSource));
+            userChars.Add(GenerateChar(userChars, dataSource));
+            userChars.Add(GenerateChar(userChars, dataSource));
+            userChars.Add(GenerateChar(userChars, dataSource));
+            userChars.Add(GenerateChar(userChars, dataSource));
+            userChars.Add(GenerateChar(userChars, dataSource));
 
 
 
@@ -34,7 +35,7 @@ namespace DatabaseProjekt
 
 
 
-        static Character GenerateChar(List<Character> chars)
+        static Character GenerateChar(List<Character> chars, NpgsqlDataSource dataSource)
         {
             Random rnd = new Random();
             string name = NamePick();
@@ -48,9 +49,20 @@ namespace DatabaseProjekt
             }
             int death = rnd.Next(6);
             Character character = new Character( name, lvl, order, stage, kills, death ) ;
-            return character;
+            
 
             //SQL when Marc Database is finished
+            NpgsqlCommand cmd = dataSource.CreateCommand(@"INSERT INTO characters (username, email, password) VALUES ($1, $2, $3)");
+            Console.WriteLine("Register an account\nEnter Username");
+            cmd.Parameters.AddWithValue(Console.ReadLine());
+            Console.WriteLine("Enter Email");
+            cmd.Parameters.AddWithValue(Console.ReadLine());
+            Console.WriteLine("Enter Password");
+            cmd.Parameters.AddWithValue(Console.ReadLine());
+            cmd.ExecuteNonQuery();
+
+            return character;
+
         }
 
         static string DeathText(int i)
