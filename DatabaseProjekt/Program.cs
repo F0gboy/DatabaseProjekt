@@ -10,7 +10,7 @@ namespace DatabaseProjekt
     {
         static void Main(string[] args)
         {
-            string connectionString = "Host=localhost;Username=postgres;Password=xk74yj6pd4w20;Database=data";
+            string connectionString = "Host=localhost;Username=postgres;Password=xxxxxx;Database=data";
 
             NpgsqlDataSource dataSource = NpgsqlDataSource.Create(connectionString);
 
