@@ -14,16 +14,20 @@ namespace DatabaseProjekt
             string connectionString = "Host=localhost;Username=postgres;Password=hats1234;Database=data";
             NpgsqlDataSource dataSource = NpgsqlDataSource.Create(connectionString);
             List<Character> userChars = new List<Character>();
-            LoginSystem loginSystem = new LoginSystem(dataSource);
+            //LoginSystem loginSystem = new LoginSystem(dataSource);
 
 
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+           
 
 
 
@@ -39,7 +43,7 @@ namespace DatabaseProjekt
 
 
 
-        static Character GenerateChar(List<Character> chars, NpgsqlDataSource dataSource, string Login_Id)
+        static Character GenerateChar(List<Character> chars, NpgsqlDataSource dataSource, int Login_Id)
         {
             Random rnd = new Random();
             string name = NamePick();
