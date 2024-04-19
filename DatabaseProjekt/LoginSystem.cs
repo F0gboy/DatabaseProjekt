@@ -42,7 +42,7 @@ namespace DatabaseProjekt
 
             NpgsqlCommand cmd = dataSource.CreateCommand(
                 "SELECT * " +
-                "FROM users " +
+                "FROM login_system " +
                 "WHERE username = $1");
 
             cmd.Parameters.AddWithValue(inputUsername);
@@ -58,7 +58,7 @@ namespace DatabaseProjekt
                     Console.WriteLine("Registering new user");
 
                     NpgsqlCommand cmd2 = dataSource.CreateCommand(
-                        "INSERT INTO users (username, password) " +
+                        "INSERT INTO login_system (username, password) " +
                         "VALUES ($1, $2)");
 
                     cmd2.Parameters.AddWithValue(inputUsername);
@@ -82,7 +82,7 @@ namespace DatabaseProjekt
             Console.WriteLine("Checking Database");
 
             NpgsqlCommand cmd = dataSource.CreateCommand(
-                "SELECT * FROM users WHERE username = $1 AND password = $2");
+                "SELECT * FROM login_system WHERE username = $1 AND password = $2");
 
             cmd.Parameters.AddWithValue(inputUsername);
             cmd.Parameters.AddWithValue(inputPassword);
@@ -95,14 +95,6 @@ namespace DatabaseProjekt
 
                 Console.WriteLine("Login successful!");
 
-                NpgsqlCommand cmd1 = dataSource.CreateCommand(
-                    "INSERT INTO login_attempts (success, attempt_time, user_id) " +
-                    "VALUES ($1, $2)");
-
-                cmd1.Parameters.AddWithValue(true);
-                cmd1.Parameters.AddWithValue(DateTime.Now);
-                cmd1.Parameters.AddWithValue(userId);
-                cmd1.ExecuteNonQuery();
             }
             else
             {
@@ -110,16 +102,7 @@ namespace DatabaseProjekt
 
                 Console.WriteLine("Login failed!");
 
-                NpgsqlCommand cmd1 = dataSource.CreateCommand(
-                    "INSERT INTO login_attempts (success, attempt_time, user_id) " +
-                    "VALUES ($1, $2)");
-
-                cmd1.Parameters.AddWithValue(false);
-                cmd1.Parameters.AddWithValue(DateTime.Now);
-                cmd1.Parameters.AddWithValue(userId);
-                cmd1.ExecuteNonQuery();
             }
-
         }
     }
 }
