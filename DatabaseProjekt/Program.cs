@@ -11,35 +11,28 @@ namespace DatabaseProjekt
         
         static void Main(string[] args)
         {
-            string connectionString = "Host=localhost;Username=postgres;Password=hats1234;Database=data";
+            string connectionString = "Host=localhost;Username=postgres;Password=xxxxx;Database=db";
             NpgsqlDataSource dataSource = NpgsqlDataSource.Create(connectionString);
             List<Character> userChars = new List<Character>();
-            LoginSystem loginSystem = new LoginSystem(dataSource);
+            //LoginSystem loginSystem = new LoginSystem(dataSource);
 
 
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
-
-
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 2));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 3));
+            userChars.Add(GenerateChar(userChars, dataSource, 2));
+            userChars.Add(GenerateChar(userChars, dataSource, 3));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
 
             foreach (Character cha in userChars)
             {
                 Console.WriteLine("Name: " + cha.name + "\nLevel: " + cha.lvl + "\nStage: " + cha.stage + "\nClass: " + Class(cha.classe) + "\nKills: " + cha.kills + "\nDeath: " + DeathText(cha.death)+ "\n\n");
 
-
             }
         }
 
-
-
-
-
-        static Character GenerateChar(List<Character> chars, NpgsqlDataSource dataSource, string Login_Id)
+        static Character GenerateChar(List<Character> chars, NpgsqlDataSource dataSource, int Login_Id)
         {
             Random rnd = new Random();
             string name = NamePick();
@@ -55,22 +48,14 @@ namespace DatabaseProjekt
             int classe = rnd.Next(6);
             Character character = new Character( name, lvl, order, stage, kills, death, classe ) ;
 
-           
-
-            
 
             string createTableLogin = "CREATE TABLE IF NOT EXISTS Login_system (Login_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Username character varying(50) NOT NULL UNIQUE, Password character varying(50) NOT NULL, PRIMARY KEY(Login_id))";
             string createTableCharacters = "CREATE TABLE IF NOT EXISTS Characters (Character_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Login_id integer NOT NULL UNIQUE, Levels integer NOT NULL, Death_Order integer NOT NULL, Class character varying(50) NOT NULL, Character_names character varying(50) NOT NULL, Stege integer NOT NULL, Kills integer NOT NULL, Death character varying(50) NOT NULL, PRIMARY KEY(Character_id), CONSTRAINT fk_login_system FOREIGN KEY (Login_id) REFERENCES Login_system(Login_id))";
 
             try
             {
-                // Establish connection
                 using (NpgsqlConnection conn = dataSource.OpenConnection())
                 {
-                    
-                    conn.Open();
-
-                    // Create command and execute SQL
                     using (NpgsqlCommand cmd1 = new NpgsqlCommand(createTableLogin, conn))
                     {
                         cmd1.ExecuteNonQuery();
@@ -81,21 +66,18 @@ namespace DatabaseProjekt
                         cmd2.ExecuteNonQuery();
                         Console.WriteLine("Table created successfully.");
                     }
-
-
-
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
+            
             //LoginSystem loginSystem = new LoginSystem(dataSource);
 
 
-
             //Login_id Lvl Death_Order Class Character_names Stege Kills Death
-            NpgsqlCommand cmdd = dataSource.CreateCommand(@"INSERT INTO Characters (Login_id, Lvl, Death_Order, Class, Character_names, Stege, Kills, Death) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)");
+            NpgsqlCommand cmdd = dataSource.CreateCommand(@"INSERT INTO Characters (Login_id, Levels, Death_Order, Class, Character_names, Stege, Kills, Death) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)");
             cmdd.Parameters.AddWithValue(Login_Id);
             cmdd.Parameters.AddWithValue(lvl);
             cmdd.Parameters.AddWithValue(order);
