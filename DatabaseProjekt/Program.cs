@@ -16,7 +16,7 @@ namespace DatabaseProjekt
 
             
 
-            string createTableLogin = "CREATE TABLE IF NOT EXISTS Login_system (Login_attemps_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Username character varying(50) NOT NULL UNIQUE, Password character varying(50) NOT NULL, Login_id integer NOT NULL UNIQUE, PRIMARY KEY(Login_attemps_id))";
+            string createTableLogin = "CREATE TABLE IF NOT EXISTS Login_system (Login_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Username character varying(50) NOT NULL UNIQUE, Password character varying(50) NOT NULL, PRIMARY KEY(Login_id))";
             string createTableCharacters = "CREATE TABLE IF NOT EXISTS Characters (Character_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Login_id integer NOT NULL UNIQUE, Levels integer NOT NULL, Death_Order integer NOT NULL, Class character varying(50) NOT NULL, Character_names character varying(50) NOT NULL, Stege integer NOT NULL, Kills integer NOT NULL, Death character varying(50) NOT NULL, PRIMARY KEY(Character_id), CONSTRAINT fk_login_system FOREIGN KEY (Login_id) REFERENCES Login_system(Login_id))";
 
             try
