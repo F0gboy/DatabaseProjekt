@@ -11,10 +11,10 @@ namespace DatabaseProjekt
         
         static void Main(string[] args)
         {
-            string connectionString = "Host=localhost;Username=postgres;Password=xxxxx;Database=db";
+            string connectionString = "Host=localhost;Username=postgres;Password=xxxxxx;Database=data";
             NpgsqlDataSource dataSource = NpgsqlDataSource.Create(connectionString);
             List<Character> userChars = new List<Character>();
-            //LoginSystem loginSystem = new LoginSystem(dataSource);
+            
 
 
             string createTableLogin = "CREATE TABLE IF NOT EXISTS Login_system (Login_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Username character varying(50) NOT NULL UNIQUE, Password character varying(50) NOT NULL, PRIMARY KEY(Login_id))";
@@ -40,10 +40,10 @@ namespace DatabaseProjekt
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
-
+            LoginSystem loginSystem = new LoginSystem(dataSource);
             userChars.Add(GenerateChar(userChars, dataSource, 1));
-            userChars.Add(GenerateChar(userChars, dataSource, 2));
-            userChars.Add(GenerateChar(userChars, dataSource, 3));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 1));
             userChars.Add(GenerateChar(userChars, dataSource, 4));
             userChars.Add(GenerateChar(userChars, dataSource, 5));
             userChars.Add(GenerateChar(userChars, dataSource, 6));
@@ -70,13 +70,7 @@ namespace DatabaseProjekt
             }
             int death = rnd.Next(6);
             int classe = rnd.Next(6);
-            Character character = new Character( name, lvl, order, stage, kills, death, classe ) ;
-
-
-            
-
-            LoginSystem loginSystem = new LoginSystem(dataSource);
-
+            Character character = new Character( name, lvl, order, stage, kills, death, classe);
 
             //Login_id Lvl Death_Order Class Character_names Stege Kills Death
             NpgsqlCommand cmdd = dataSource.CreateCommand(@"INSERT INTO Characters (Login_id, Levels, Death_Order, Class, Character_names, Stege, Kills, Death) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)");
