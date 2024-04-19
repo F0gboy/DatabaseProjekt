@@ -17,13 +17,37 @@ namespace DatabaseProjekt
             //LoginSystem loginSystem = new LoginSystem(dataSource);
 
 
+            string createTableLogin = "CREATE TABLE IF NOT EXISTS Login_system (Login_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Username character varying(50) NOT NULL UNIQUE, Password character varying(50) NOT NULL, PRIMARY KEY(Login_id))";
+            string createTableCharacters = "CREATE TABLE IF NOT EXISTS Characters (Character_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Login_id integer NOT NULL, Levels integer NOT NULL, Death_Order integer NOT NULL, Class character varying(50) NOT NULL, Character_names character varying(50) NOT NULL, Stege integer NOT NULL, Kills integer NOT NULL, Death character varying(50) NOT NULL, PRIMARY KEY(Character_id), CONSTRAINT fk_login_system FOREIGN KEY (Login_id) REFERENCES Login_system(Login_id))";
+
+            try
+            {
+                using (NpgsqlConnection conn = dataSource.OpenConnection())
+                {
+                    using (NpgsqlCommand cmd1 = new NpgsqlCommand(createTableLogin, conn))
+                    {
+                        cmd1.ExecuteNonQuery();
+                        Console.WriteLine("Login Table created successfully.");
+                    }
+                    using (NpgsqlCommand cmd2 = new NpgsqlCommand(createTableCharacters, conn))
+                    {
+                        cmd2.ExecuteNonQuery();
+                        Console.WriteLine("Character Table created successfully.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
             userChars.Add(GenerateChar(userChars, dataSource, 1));
             userChars.Add(GenerateChar(userChars, dataSource, 2));
-            userChars.Add(GenerateChar(userChars, dataSource, 1));
             userChars.Add(GenerateChar(userChars, dataSource, 3));
-            userChars.Add(GenerateChar(userChars, dataSource, 2));
-            userChars.Add(GenerateChar(userChars, dataSource, 3));
-            userChars.Add(GenerateChar(userChars, dataSource, 1));
+            userChars.Add(GenerateChar(userChars, dataSource, 4));
+            userChars.Add(GenerateChar(userChars, dataSource, 5));
+            userChars.Add(GenerateChar(userChars, dataSource, 6));
+            userChars.Add(GenerateChar(userChars, dataSource, 7));
 
             foreach (Character cha in userChars)
             {
@@ -49,31 +73,9 @@ namespace DatabaseProjekt
             Character character = new Character( name, lvl, order, stage, kills, death, classe ) ;
 
 
-            string createTableLogin = "CREATE TABLE IF NOT EXISTS Login_system (Login_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Username character varying(50) NOT NULL UNIQUE, Password character varying(50) NOT NULL, PRIMARY KEY(Login_id))";
-            string createTableCharacters = "CREATE TABLE IF NOT EXISTS Characters (Character_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Login_id integer NOT NULL UNIQUE, Levels integer NOT NULL, Death_Order integer NOT NULL, Class character varying(50) NOT NULL, Character_names character varying(50) NOT NULL, Stege integer NOT NULL, Kills integer NOT NULL, Death character varying(50) NOT NULL, PRIMARY KEY(Character_id), CONSTRAINT fk_login_system FOREIGN KEY (Login_id) REFERENCES Login_system(Login_id))";
-
-            try
-            {
-                using (NpgsqlConnection conn = dataSource.OpenConnection())
-                {
-                    using (NpgsqlCommand cmd1 = new NpgsqlCommand(createTableLogin, conn))
-                    {
-                        cmd1.ExecuteNonQuery();
-                        Console.WriteLine("Table created successfully.");
-                    }
-                    using (NpgsqlCommand cmd2 = new NpgsqlCommand(createTableCharacters, conn))
-                    {
-                        cmd2.ExecuteNonQuery();
-                        Console.WriteLine("Table created successfully.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
             
-            //LoginSystem loginSystem = new LoginSystem(dataSource);
+
+            LoginSystem loginSystem = new LoginSystem(dataSource);
 
 
             //Login_id Lvl Death_Order Class Character_names Stege Kills Death
