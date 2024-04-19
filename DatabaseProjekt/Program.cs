@@ -59,7 +59,8 @@ namespace DatabaseProjekt
 
             
 
-            string createTableSql = "CREATE TABLE IF NOT EXISTS Characters (Charater_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Login_id integer NOT NULL, LvL integer NOT NULL, Death_Order integer NOT NULL, Class character varying(50) NOT NULL, Charater_names character varying(50) NOT NULL, Stege integer NOT NULL, Kills integer NOT NULL, Death character varying(50) NOT NULL, PRIMARY KEY(Charater_id), CONSTRAINT fk_login FOREIGN KEY (login_id) REFERENCES login(login_id))";
+            string createTableLogin = "CREATE TABLE IF NOT EXISTS Login_system (Login_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Username character varying(50) NOT NULL UNIQUE, Password character varying(50) NOT NULL, PRIMARY KEY(Login_id))";
+            string createTableCharacters = "CREATE TABLE IF NOT EXISTS Characters (Character_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Login_id integer NOT NULL UNIQUE, Levels integer NOT NULL, Death_Order integer NOT NULL, Class character varying(50) NOT NULL, Character_names character varying(50) NOT NULL, Stege integer NOT NULL, Kills integer NOT NULL, Death character varying(50) NOT NULL, PRIMARY KEY(Character_id), CONSTRAINT fk_login_system FOREIGN KEY (Login_id) REFERENCES Login_system(Login_id))";
 
             try
             {
@@ -70,9 +71,14 @@ namespace DatabaseProjekt
                     conn.Open();
 
                     // Create command and execute SQL
-                    using (NpgsqlCommand cmd = new NpgsqlCommand(createTableSql, conn))
+                    using (NpgsqlCommand cmd1 = new NpgsqlCommand(createTableLogin, conn))
                     {
-                        cmd.ExecuteNonQuery();
+                        cmd1.ExecuteNonQuery();
+                        Console.WriteLine("Table created successfully.");
+                    }
+                    using (NpgsqlCommand cmd2 = new NpgsqlCommand(createTableCharacters, conn))
+                    {
+                        cmd2.ExecuteNonQuery();
                         Console.WriteLine("Table created successfully.");
                     }
 
@@ -84,6 +90,7 @@ namespace DatabaseProjekt
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
+            //LoginSystem loginSystem = new LoginSystem(dataSource);
 
 
 
