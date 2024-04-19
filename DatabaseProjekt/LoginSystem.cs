@@ -84,25 +84,22 @@ namespace DatabaseProjekt
             NpgsqlCommand cmd = dataSource.CreateCommand(
                 "SELECT * FROM login_system WHERE username = $1 AND password = $2");
 
-            cmd.Parameters.AddWithValue(inputUsername);
+            cmd.Parameters.AddWithValue(inputUsername); 
             cmd.Parameters.AddWithValue(inputPassword);
 
             NpgsqlDataReader reader = cmd.ExecuteReader();
 
-            if (reader.HasRows)
+            if (reader.Read()) 
             {
                 int userId = reader.GetInt32(0);
 
                 Console.WriteLine("Login successful!");
-
             }
             else
             {
-                int userId = reader.GetInt32(0);
-
                 Console.WriteLine("Login failed!");
-
             }
         }
+
     }
 }
