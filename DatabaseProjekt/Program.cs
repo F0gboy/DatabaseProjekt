@@ -14,21 +14,22 @@ namespace DatabaseProjekt
             string connectionString = "Host=localhost;Username=postgres;Password=hats1234;Database=data";
             NpgsqlDataSource dataSource = NpgsqlDataSource.Create(connectionString);
             List<Character> userChars = new List<Character>();
+            LoginSystem loginSystem = new LoginSystem(dataSource);
 
 
-            userChars.Add(GenerateChar(userChars, dataSource));
-            userChars.Add(GenerateChar(userChars, dataSource));
-            userChars.Add(GenerateChar(userChars, dataSource));
-            userChars.Add(GenerateChar(userChars, dataSource));
-            userChars.Add(GenerateChar(userChars, dataSource));
-            userChars.Add(GenerateChar(userChars, dataSource));
-            userChars.Add(GenerateChar(userChars, dataSource));
+            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
+            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
+            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
+            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
+            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
+            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
+            userChars.Add(GenerateChar(userChars, dataSource, "PlaceHolder"));
 
 
 
             foreach (Character cha in userChars)
             {
-                Console.WriteLine("Name: " + cha.name + "\nLevel: " + cha.lvl + "\nStage: " + cha.stage + "\nKills: " + cha.kills + "\nDeath: " + DeathText(cha.death)+ "\n\n");
+                Console.WriteLine("Name: " + cha.name + "\nLevel: " + cha.lvl + "\nStage: " + cha.stage + "\nClass: " + Class(cha.classe) + "\nKills: " + cha.kills + "\nDeath: " + DeathText(cha.death)+ "\n\n");
 
 
             }
@@ -38,7 +39,7 @@ namespace DatabaseProjekt
 
 
 
-        static Character GenerateChar(List<Character> chars, NpgsqlDataSource dataSource)
+        static Character GenerateChar(List<Character> chars, NpgsqlDataSource dataSource, string Login_Id)
         {
             Random rnd = new Random();
             string name = NamePick();
@@ -51,22 +52,11 @@ namespace DatabaseProjekt
                 kills += rnd.Next(10);
             }
             int death = rnd.Next(6);
-            Character character = new Character( name, lvl, order, stage, kills, death ) ;
-            
+            int classe = rnd.Next(6);
+            Character character = new Character( name, lvl, order, stage, kills, death, classe ) ;
 
-            //SQL when Marc Database is finished
-            NpgsqlCommand cmd = dataSource.CreateCommand(@"INSERT INTO characters (username, email, password) VALUES ($1, $2, $3)");
-            Console.WriteLine("Register an account\nEnter Username");
-            cmd.Parameters.AddWithValue(Console.ReadLine());
-            Console.WriteLine("Enter Email");
-            cmd.Parameters.AddWithValue(Console.ReadLine());
-            Console.WriteLine("Enter Password");
-            cmd.Parameters.AddWithValue(Console.ReadLine());
-            cmd.ExecuteNonQuery();
+           
 
-            return character;
-
-            LoginSystem loginSystem = new LoginSystem(dataSource);
             
 
             string createTableSql = "CREATE TABLE IF NOT EXISTS Characters (Charater_id integer NOT NULL GENERATED ALWAYS AS IDENTITY(INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1), Login_id integer NOT NULL, LvL integer NOT NULL, Death_Order integer NOT NULL, Class character varying(50) NOT NULL, Charater_names character varying(50) NOT NULL, Stege integer NOT NULL, Kills integer NOT NULL, Death character varying(50) NOT NULL, PRIMARY KEY(Charater_id), CONSTRAINT fk_login FOREIGN KEY (login_id) REFERENCES login(login_id))";
@@ -74,8 +64,9 @@ namespace DatabaseProjekt
             try
             {
                 // Establish connection
-                using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
+                using (NpgsqlConnection conn = dataSource.OpenConnection())
                 {
+                    
                     conn.Open();
 
                     // Create command and execute SQL
@@ -84,6 +75,9 @@ namespace DatabaseProjekt
                         cmd.ExecuteNonQuery();
                         Console.WriteLine("Table created successfully.");
                     }
+
+
+
                 }
             }
             catch (Exception ex)
@@ -91,6 +85,22 @@ namespace DatabaseProjekt
                 Console.WriteLine("Error: " + ex.Message);
             }
 
+
+
+            //Login_id Lvl Death_Order Class Character_names Stege Kills Death
+            NpgsqlCommand cmdd = dataSource.CreateCommand(@"INSERT INTO Characters (Login_id, Lvl, Death_Order, Class, Character_names, Stege, Kills, Death) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)");
+            cmdd.Parameters.AddWithValue(Login_Id);
+            cmdd.Parameters.AddWithValue(lvl);
+            cmdd.Parameters.AddWithValue(order);
+            cmdd.Parameters.AddWithValue(classe);
+            cmdd.Parameters.AddWithValue(name);
+            cmdd.Parameters.AddWithValue(stage);
+            cmdd.Parameters.AddWithValue(kills);
+            cmdd.Parameters.AddWithValue(death);
+            cmdd.ExecuteNonQuery();
+
+
+            return character;
         }
 
         static string DeathText(int i)
@@ -120,6 +130,32 @@ namespace DatabaseProjekt
             }
         }
 
+        static string Class(int i)
+        {
+            switch (i)
+            {
+                case 1:
+                    return "Rogue";
+
+                case 2:
+                    return "Ranger";
+
+                case 3:
+                    return "Necromancer";
+
+                case 4:
+                    return "Paladin";
+
+                case 5:
+                    return "Knight";
+
+                case 6:
+                    return "Healer";
+
+                default:
+                    return "Peasant";
+            }
+        }
 
         static string NamePick()
         {
