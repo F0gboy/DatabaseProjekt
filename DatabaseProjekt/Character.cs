@@ -16,7 +16,6 @@ namespace DatabaseProjekt
         public int death;
         public int classe;
 
-
         public Character (string name, int lvl, int order, int stage, int kills, int death, int classe)
         {
             this.name = name;
@@ -26,12 +25,6 @@ namespace DatabaseProjekt
             this.kills = kills;
             this.death = death;
             this.classe = classe;
-             
         }
-
-
-
-
     }
-
 }
